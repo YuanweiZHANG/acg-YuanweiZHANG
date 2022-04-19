@@ -10,7 +10,7 @@
 
 Follow the instruction below to build the attached C++ code. This code will display an OpenGL window showing a triangle.  Take a screenshot of the window (it should look like the image above) and paste it below.  By putting the imae under the directory `cga-<username>/task00` and edit this markdown document. 
 
-=== (paste the screenshot image here`![](image file name)` ) === 
+==![result](task0_result.png)== 
 
 
 ----
@@ -116,5 +116,4 @@ got to the GitHub webpage `https://github.com/ACG-2022S/acg-<username>` . If eve
 
 - I mistakenly submit the assignement in the `main` branch
   - Make a branch `task00` and submit again
-
 
