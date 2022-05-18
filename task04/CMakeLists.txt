@@ -21,6 +21,11 @@ add_definitions(-DPATH_SRC_DIR="${PROJECT_SOURCE_DIR}")
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../external/glfwlib)
 find_package(glfw3 REQUIRED)
 
+# eigen
+FILE(GLOB EIGEN3_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../external/eigen*) # find downloaded eigen directories in 3rd_party
+message(STATUS "eigen directory candidate: ${EIGEN3_ROOT}")
+include(${CMAKE_CURRENT_SOURCE_DIR}/../external/FindEigen3.cmake) # call script to find eigen3
+
 # opengl
 find_package(OpenGL REQUIRED)
 
@@ -41,4 +46,9 @@ target_link_libraries(${PROJECT_NAME}
     OpenGL::GL
     glfw
     Threads::Threads
+    Eigen3::Eigen
     )
+
+GET_TARGET_PROPERTY(EIGEN3_EIGEN_INCLUDE_DIR
+  Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+message(STATUS "eigen3 include directory: ${EIGEN3_EIGEN_INCLUDE_DIR}")

@@ -27,6 +27,8 @@
 #include "delfem2/glfw/viewer3.h"
 #include "delfem2/glfw/util.h"
 
+#include <Eigen/Dense>
+
 namespace dfm2 = delfem2;
 
 // ----------------------------------------
@@ -48,6 +50,27 @@ double SamplingHemisphere(
   // hint3: for longitude use inverse sampling method to achieve cosine weighted sample.
   // hint4: first assume z is the up in the polar coordinate, then rotate the sampled direction such that "z" will be up.
   // write some codes below (5-10 lines)
+    auto longitude = dfm2::MyERand48<double>(Xi);
+    auto latitude = dfm2::MyERand48<double>(Xi);
+    longitude = acos(sqrt(longitude));
+    Eigen::Vector3d direction;
+    direction(0) = cos(latitude) * sin(longitude);
+    direction(1) = sin(latitude) * sin(longitude);
+    direction(2) = cos(longitude);
+    // computing rotation matrix via euler angles: Z * Y
+    double latitude_n = atan2(nrm[1], nrm[0]); // Z-axis angle
+    double longitude_n = acos(nrm[2]);         // Y-axis angle
+    Eigen::Matrix3d rotation;
+    rotation <<
+    cos(latitude_n)*cos(longitude_n), -sin(latitude_n), cos(latitude_n)*sin(longitude_n),
+    sin(latitude_n)*cos(longitude_n),  cos(latitude_n), sin(latitude_n)*sin(longitude_n),
+                   -sin(longitude_n),                0,                 cos(longitude_n);
+
+    direction = rotation * direction;
+    dir[0] = direction(0);
+    dir[1] = direction(1);
+    dir[2] = direction(2);
+    return 1.;
 
 
   // below: naive implementation to "uniformly" sample hemisphere using "rejection sampling"
