@@ -185,6 +185,27 @@ void main()
     // Problem2 of the assignment
     // write some code to complete the implementation of bisection method
     // around 10 lines of code should be enough
+    if ((snl - snu) == 1) { // only have one root in [lower, upper]
+      int iter_max = 15;
+      while((iter_max--) > 0) {
+        middle = (lower + upper) * 0.5;
+        float middle_v = EvaluatePolynomial(middle, coeff, 6);
+        float lower_v = EvaluatePolynomial(lower, coeff, 6);
+        if (upper - lower < 0.0001 || abs(middle_v) < 1e-4) {
+          vec2 pm = EvaluateBezier(middle,bezier);
+          Distance = min(Distance,length(pm));
+          break;
+        }
+        if (lower_v * middle_v > 0) lower = middle;
+        else upper = middle;
+      }
+      continue;
+    }
+    // actually code above can be removed. But without it, the running is too slow, that is FPS is low.
+    // Maybe that is because SturmNumber() costs a lot of time
+    int snm = SturmNumber(middle, sturm_seq);
+    if ((snl - snm) > 0) stack[nstack++] = range(lower, middle, snl, snm);
+    if ((snm - snu) > 0) stack[nstack++] = range(middle, upper, snm, snu);
   }
 
 
