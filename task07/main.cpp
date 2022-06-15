@@ -130,6 +130,32 @@ int main() {
       // Adjust the coefficient LM algorithm such that the energy decrease after updating "arb.angle".
       // The implementation should be 3-5 in lines.
 
+      // double W = W0;
+      // int times = 100;
+      // float alpha = 2;
+      // while ((abs(W) > 1e-5) && (times > 0)) {
+      //   times--;
+      //   const Eigen::Matrix<double, 8, 1> angle_update = -(arb.diff_pos_def.transpose() * arb.diff_pos_def + 1/alpha*Eigen::MatrixXd::Identity(8, 8)).inverse() * arb.diff_pos_def.transpose() * (arb.pos_def - pos_trg);
+      //   arb.angle += angle_update;
+      //   arb.UpdateTransformations();
+      //   double new_W = 0.5*(arb.pos_def - pos_trg).dot(arb.pos_def - pos_trg);
+      //   if (new_W < W) {
+      //     alpha *= 2;
+      //     W = new_W;
+      //   }
+      //   else {
+      //     alpha /= 2;
+      //     arb.angle -= angle_update;
+      //     arb.UpdateTransformations();
+      //   }
+      // }
+
+      // I think the above is the correct LM algorithm because alpha is adaptive.
+      // But following codes also work.
+      float alpha = 5;
+      const Eigen::Matrix<double, 8, 1> angle_update = -(diff_pos_def.transpose() * diff_pos_def + 1/alpha*Eigen::MatrixXd::Identity(8, 8)).inverse() * diff_pos_def.transpose() * (pos_def - pos_trg);
+      arb.angle = angle0 + angle_update;
+
       // editing ends here
       arb.UpdateTransformations();
       double W1 = 0.5*(arb.pos_def - pos_trg).dot(arb.pos_def - pos_trg); // energy after update
